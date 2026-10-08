@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
-import { DollarSign, ShoppingBag, AlertTriangle, PackageX, ArrowRight } from 'lucide-react';
+import { DollarSign, ShoppingBag, AlertTriangle, PackageX, ArrowRight, TrendingUp } from 'lucide-react';
 import StatCard from '../components/StatCard.jsx';
 import Badge from '../components/Badge.jsx';
 import { Spinner, EmptyState, Skeleton } from '../components/Feedback.jsx';
@@ -38,7 +38,7 @@ export default function DashboardPage() {
     return (
       <div>
         <div className="stat-grid">
-          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} height={130} />)}
+          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} height={130} />)}
         </div>
         <Skeleton height={320} />
       </div>
@@ -47,7 +47,7 @@ export default function DashboardPage() {
 
   if (!data) return <EmptyState title="Could not load dashboard" hint="Refresh the page to try again." />;
 
-  const { performance, lowStock, valuation, topSellers, trend } = data;
+  const { performance, lowStock, valuation, topSellers, trend, profit } = data;
 
   return (
     <div>
@@ -60,6 +60,7 @@ export default function DashboardPage() {
 
       <div className="stat-grid">
         <StatCard icon={DollarSign} tone="success" label="Total Revenue" value={money(performance.totalRevenue)} hint="30d" />
+        <StatCard icon={TrendingUp} tone={profit && profit.totalProfit >= 0 ? 'success' : 'danger'} label="Total Profit" value={money(profit?.totalProfit)} hint={profit ? `${profit.profitMarginPct}% margin` : '30d'} />
         <StatCard icon={ShoppingBag} tone="primary" label="Items Sold" value={performance.totalItemsSold.toLocaleString()} hint="30d" />
         <StatCard icon={AlertTriangle} tone={lowStock.count > 0 ? 'warning' : 'success'} label="Low-Stock Alerts" value={lowStock.count} hint="act now" />
         <StatCard icon={PackageX} tone="info" label="Stock Value (Cost)" value={money(valuation.totalCostValue)} hint={`${valuation.totalUnits} units`} />
